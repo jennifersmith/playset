@@ -14,3 +14,12 @@
 
 (defn generate-set-cards [& attributes]
   (set (create-card-tuples attributes)))
+
+
+(defn is-set? [cards]
+  (let [card-count (count cards)
+        combined-attribute-counts (map count (map set (apply map vector cards)))]
+    (empty?
+     (remove (set [1 card-count])
+             combined-attribute-counts))
+    ))
