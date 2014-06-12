@@ -1,8 +1,7 @@
-(ns playset.core)
+(ns playset.core
+  (:require [clojure.core.logic :as logic]))
 
 ;; can use math.combinatorics here. not gunna.
-
-
 
 (defn create-card-tuples
   [[current-attributes & remaining-attributes]]
@@ -16,10 +15,26 @@
   (set (create-card-tuples attributes)))
 
 
+;; assumes only three cards
+
+(logic/defne valid-attributeo [attr] 
+  ([[n n n]])
+  ([attr] (logic/distincto attr)))
+
+(logic/defne valid-seto [cards]
+  ([[(a . arest)
+     (b . brest)
+     (c . crest)]]
+     (valid-attributeo [a b c])
+     (valid-seto [arest brest crest])
+    )
+  ([[() () ()]]))
+
 (defn is-set? [cards]
-  (let [card-count (count cards)
-        combined-attribute-counts (map count (map set (apply map vector cards)))]
-    (empty?
-     (remove (set [1 card-count])
-             combined-attribute-counts))
-    ))
+  (first
+   (logic/run 1 [n] 
+              (logic/matcha [cards n]
+                            ([cards true] (valid-seto cards))
+                            ([_ false])))))
+
+
