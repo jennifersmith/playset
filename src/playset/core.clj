@@ -15,11 +15,21 @@
   (set (create-card-tuples attributes)))
 
 
+;; how is this not in core.logic?
+
+(logic/defne equalo [l]
+  ([(n . remaining)]
+     (logic/conde
+      ((logic/== remaining []))
+      ((equalo remaining)
+       (logic/firsto remaining n)))))
+
 ;; assumes only three cards
 
-(logic/defne valid-attributeo [attr] 
-  ([[n n n]])
-  ([attr] (logic/distincto attr)))
+(defn valid-attributeo [attr] 
+  (logic/conde
+   ((equalo attr))
+   ((logic/distincto attr))))
 
 (logic/defne valid-seto [cards]
   ([[(a . arest)
